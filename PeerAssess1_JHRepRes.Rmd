@@ -6,7 +6,7 @@ output: html_document
 ---
 This is an R Markdown file, for the first peer assessment assignment in the John Hopkins Coursera MOOC, Reproducible Research.
 
-This first R code reads in the raw data, displays the first six records and the final six records.
+This first R code reads in the raw data, displays the first six records and also displays the final six records.
 
 ```{r}
 rawActivity = read.csv("activity.csv", header = TRUE)
@@ -14,10 +14,37 @@ head(rawActivity)
 tail(rawActivity)
 ```
 
-Here is summary information for all three raw data variables:
+Here is the default summary information for all three raw data variables:
 
 ```{r, echo=FALSE}
 summary(rawActivity)
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+Here's a histogram showing the distribution of steps-per-day, for each of the 53 days where step data is available. It is worth noting that there are two dates: 10/2 and 11/15 where the steps-per-day were only 126 and 41 respectively. Although I did not exclude these low outliers, perhaps I should have done so.
+
+```{r, echo=FALSE}
+completeActivity <- na.omit(rawActivity)
+histInput <- aggregate(completeActivity$steps, by=list(completeActivity$date), FUN=sum)
+hist(histInput$x, breaks=9, xlab="Total Steps per Day", main="HISTOGRAM")
+```
+
+The mean of total steps per day for this distribution is:
+
+```{r}
+mean(histInput$x)
+```
+
+And the median of total steps per day for this distribution is:
+
+```{r}
+median(histInput$x)
+```
+
+Here's a timeplot
+
+```{r, echo=FALSE}
+timeplotInput <- aggregate(completeActivity$steps, by=list(completeActivity$interval), FUN=mean)
+plot(timeplotInput$Group.1, timeplotInput$x, xlab = "Time of Day (military format", ylab = "Average Number of Steps (5min intervals)", main = "Steps, by Time of Day", type ="l")
+```
+
