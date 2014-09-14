@@ -61,3 +61,53 @@ max(timeplotInput$x)
 
 ### Backfilling the Missing Values
 
+The number of missing values in the dataset is:
+
+```{r}
+dim(rawActivity[!complete.cases(rawActivity),])[1]
+```
+
+I can "backfill" the missing data by filling in the missing value for each time-of-day
+interval with the rounded average for that interval for all of the days for which we
+do have data, as follows:
+
+```{r}
+missingActivity <- rawActivity[!complete.cases(rawActivity),]
+```
+
+```{r}
+timeplotInput <- cbind(timeplotInput, xr = round(timeplotInput$x))
+```
+
+```{r}
+missingActivity$steps <- timeplotInput$xr
+```
+
+```{r}
+imputedActivity <- rbind(completeActivity, missingActivity)
+```
+
+Here's a histogram showing the distribution of steps-per-day, for each of the 61 days where step data is available *or imputed.* I did **not** impute data for two dates: 10/2 and 11/15 where the steps-per-day were only 126 and 41 respectively. Perhaps I should have done so.
+
+```{r, echo=FALSE}
+hist2Input <- aggregate(imputedActivity$steps, by=list(imputedActivity$date), FUN=sum)
+hist(hist2Input$x, breaks=9, xlab="Total Steps per Day", main="HISTOGRAM")
+```
+
+The mean of total steps per day for this distribution is:
+
+```{r}
+mean(hist2Input$x)
+```
+
+And the median of total steps per day for this distribution is:
+
+```{r}
+median(hist2Input$x)
+```
+
+Because of the method by which I imputed the missing data, the mean did not change, and the median changed only slightly.
+
+### Weekdays vs Weekends
+
+last moves
