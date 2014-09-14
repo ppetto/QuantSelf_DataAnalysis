@@ -4,7 +4,9 @@ author: "Peter Petto, for Coursera Reproducible Research Peer Assessment #1"
 date: "September 13, 2014"
 output: html_document
 ---
-This is an R Markdown file, for the first peer assessment assignment in the John Hopkins Coursera MOOC, Reproducible Research.
+This is an R Markdown file, for the first peer assessment assignment in the John Hopkins' Coursera MOOC, Reproducible Research.
+
+### Loading the Data
 
 This first R code reads in the raw data, displays the first six records and also displays the final six records.
 
@@ -20,6 +22,7 @@ Here is the default summary information for all three raw data variables:
 summary(rawActivity)
 ```
 
+### Total Number of Steps per Day
 
 Here's a histogram showing the distribution of steps-per-day, for each of the 53 days where step data is available. It is worth noting that there are two dates: 10/2 and 11/15 where the steps-per-day were only 126 and 41 respectively. Although I did not exclude these low outliers, perhaps I should have done so.
 
@@ -41,10 +44,20 @@ And the median of total steps per day for this distribution is:
 median(histInput$x)
 ```
 
+### Average Daily Activity Pattern
+
 Here's a timeplot
 
 ```{r, echo=FALSE}
 timeplotInput <- aggregate(completeActivity$steps, by=list(completeActivity$interval), FUN=mean)
 plot(timeplotInput$Group.1, timeplotInput$x, xlab = "Time of Day (military format", ylab = "Average Number of Steps (5min intervals)", main = "Steps, by Time of Day", type ="l")
 ```
+
+The interval with the greatest number of steps occurs at 835 and contains:
+
+```{r}
+max(timeplotInput$x)
+```
+
+### Backfilling the Missing Values
 
