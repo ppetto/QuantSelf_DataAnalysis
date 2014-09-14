@@ -110,4 +110,19 @@ Because of the method by which I imputed the missing data, the mean did not chan
 
 ### Weekdays vs Weekends
 
-last moves
+And finally, here's a comparison of weekday vs weekend interval activity:
+
+```{r, echo=FALSE, warning=FALSE}
+library(lubridate)
+complete2Activity <- cbind(completeActivity, wend = factor(wday(as.Date(completeActivity$date)), c(0,1,2,3,4,5,6), c(T,F,F,F,F,F,T)))
+weekendActivity <- complete2Activity[complete2Activity$wend==TRUE,]
+weekdayActivity <- complete2Activity[complete2Activity$wend==FALSE,]
+timeplot2Input <- aggregate(weekdayActivity$steps, by=list(weekdayActivity$interval), FUN=mean)
+plot(timeplot2Input$Group.1, timeplot2Input$x, xlab = "Time of Day (military format", ylab = "Average Number of Weekday Steps (5min intervals)", main = "Weekday Steps, by Time of Day", type ="l")
+```
+
+```{r, echo=FALSE}
+timeplot3Input <- aggregate(weekendActivity$steps, by=list(weekendActivity$interval), FUN=mean)
+plot(timeplot3Input$Group.1, timeplot3Input$x, xlab = "Time of Day (military format", ylab = "Average Number of Weekend Steps (5min intervals)", main = "Weekend Steps, by Time of Day", type ="l")
+```
+
